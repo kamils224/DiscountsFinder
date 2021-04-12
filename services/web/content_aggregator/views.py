@@ -1,5 +1,5 @@
 from app import app
-from .models import ShopWebsite
+from models import ShopWebsite
 
 
 @app.route("/")
