@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./services/
+    command: python app.py runserver --host 0.0.0.0
+    volumes:
+        - ./services:/app/
+    ports:
+      - 5000:5000
+    env_file:
+      - ./.env.dev
+
+  db:
+    image: postgres:12-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=docker_db
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
