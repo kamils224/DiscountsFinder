@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import URLType
 
-from app import db
+from services.app import db
 
 
 class ShopWebsite(db.Model):
