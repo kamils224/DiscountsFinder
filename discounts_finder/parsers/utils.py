@@ -8,7 +8,7 @@ def remove_letters(text: str) -> str:
 
 
 def price_text_to_decimal(text: str) -> Decimal:
-    return remove_letters(text).replace(",", ".")
+    return Decimal(remove_letters(text).replace(",", "."))
 
 
 def get_matching_text(text_samples: List[str], pattern: str) -> List[Tuple[int, str]]:
