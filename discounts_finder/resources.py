@@ -9,7 +9,4 @@ products_schema = ProductSchema(many=True)
 class Products(Resource):
     def get(self):
         products = Product.query.all()
-        print("json")
-        for p in products:
-            print(p.price)
         return products_schema.dump(products)
