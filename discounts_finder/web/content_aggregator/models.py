@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import URLType
 
-from services.app import db
+from discounts_finder.app import db
 
 
 class ShopWebsite(db.Model):
