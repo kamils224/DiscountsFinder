@@ -26,3 +26,17 @@ services:
       - 5432:5432
   redis:
     image: redis:alpine
+  worker:
+    build:
+      context: ./discounts_finder/
+      args:
+        - FLASK_ENV=${FLASK_ENV:-production}
+    command: celery -A app.celery worker -l info
+    user: nobody
+    depends_on:
+      - redis
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./public:/app/public
+
