@@ -40,4 +40,4 @@ class BaseProductsFinder(metaclass=ABCMeta):
 
     @abstractmethod
     def get_products(self) -> List[ProductDTO]:
-        raise NotImplemented()
+        raise NotImplementedError()
