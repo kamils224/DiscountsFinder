@@ -4,22 +4,42 @@ services:
   web:
     build: ./discounts_finder/
     command: python app.py runserver --host 0.0.0.0
+    restart: unless-stopped
     volumes:
-        - ./discounts_finder:/app/
+      - ./discounts_finder:/app/
     ports:
       - 5000:5000
     env_file:
       - ./.env.dev
     depends_on:
-      - db
-
-  db:
-    image: postgres:12-alpine
+      - redis
+      - mongodb
+  mongodb:
+    image: mongo:4.4.5-bionic
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod --auth
+    env_file:
+      - ./.env.dev
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=docker_db
+      - mongodbdata:/data/db
     ports:
-      - 5432:5432
+      - 27017:27017
+  redis:
+    image: redis:alpine
+  worker:
+    build:
+      context: ./discounts_finder/
+      args:
+        - FLASK_ENV=${FLASK_ENV:-production}
+    command: celery -A app.celery worker -l info
+    user: nobody
+    depends_on:
+      - redis
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./public:/app/public
+volumes:
+  mongodbdata:
+    driver: local

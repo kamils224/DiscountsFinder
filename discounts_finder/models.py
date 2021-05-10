@@ -1,21 +1,17 @@
-from db import db
+from dataclasses import dataclass
 
 
-class ShopWebsite(db.Model):
-    __tablename__ = "shop_website"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    website = db.Column(db.String(200))
+@dataclass
+class ShopWebsite:
+    url: str
+    name: str
 
-
-class Product(db.Model):
-    __tablename__ = "product"
-    id = db.Column(db.Integer, primary_key=True)
-    price = db.Column(db.Integer)
-    discount_price = db.Column(db.Integer)
-    url = db.Column(db.String(200), index=True, unique=True)
-    shop_id = db.Column(db.Integer, db.ForeignKey("shop_website.id"), nullable=False)
-    shop = db.relationship("ShopWebsite", backref=db.backref("products", lazy=True))
+@dataclass
+class Product:
+    price: int
+    discount_price: int
+    url: str
+    shop_name: str
 
     def discount(self) -> int:
         discount_percentage = (float(self.discount_price) / float(self.price)) * 100
