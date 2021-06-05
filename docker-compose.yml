@@ -27,13 +27,22 @@ services:
       - 27017:27017
   redis:
     image: redis:alpine
-  worker:
+  celery-worker:
     build:
       context: ./discounts_finder/
-      args:
-        - FLASK_ENV=${FLASK_ENV:-production}
-    command: celery -A app.celery worker -l info
-    user: nobody
+    command: celery -A celery_init.celery worker -l info
+    user: root
+    depends_on:
+      - redis
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./public:/app/public
+  celery-beat:
+    build:
+      context: ./discounts_finder/
+    command: celery -A celery_init.celery beat -l info
+    user: root
     depends_on:
       - redis
     env_file:

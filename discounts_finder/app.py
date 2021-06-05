@@ -1,8 +1,10 @@
-from celery import Celery
+import logging
+
 from flask import Flask
 from flask_restful import Api
 from flask_script import Manager
 
+from celery_init import make_celery
 from mongo import mongo
 from ma import ma
 
@@ -13,10 +15,9 @@ marshmallow = ma.init_app(app)
 api = Api(app)
 mongo.init_app(app)
 
-celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
-celery.conf.update(app.config)
-
 manager = Manager(app)
+celery = make_celery()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     manager.run()
