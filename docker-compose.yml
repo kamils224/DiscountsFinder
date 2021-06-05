@@ -6,7 +6,7 @@ services:
     command: python app.py runserver --host 0.0.0.0
     restart: unless-stopped
     volumes:
-      - ./discounts_finder:/app/
+      - ./discounts_finder:/discounts_finder/
     ports:
       - 5000:5000
     env_file:
@@ -28,6 +28,7 @@ services:
   redis:
     image: redis:alpine
   celery-worker:
+    working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
     command: celery -A celery_init.celery worker -l info
@@ -37,8 +38,9 @@ services:
     env_file:
       - ./.env.dev
     volumes:
-      - ./public:/app/public
+      - ./discounts_finder:/discounts_finder
   celery-beat:
+    working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
     command: celery -A celery_init.celery beat -l info
@@ -48,7 +50,7 @@ services:
     env_file:
       - ./.env.dev
     volumes:
-      - ./public:/app/public
+      - ./discounts_finder:/discounts_finder
 volumes:
   mongodbdata:
     driver: local

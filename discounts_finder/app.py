@@ -4,9 +4,9 @@ from flask import Flask
 from flask_restful import Api
 from flask_script import Manager
 
-from celery_init import make_celery
-from mongo import mongo
-from ma import ma
+from discounts_finder.celery_init import make_celery
+from discounts_finder.mongo import mongo
+from discounts_finder.ma import ma
 
 app = Flask(__name__)
 app.config.from_object("config.Config")
