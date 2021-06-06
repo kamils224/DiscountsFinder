@@ -1,9 +1,10 @@
+Dockerfile
 .git
 /env
 __pycache__
 /sandbox
 
-*/*/README.md
+README.md
 
 # Utils
 /sandbox
