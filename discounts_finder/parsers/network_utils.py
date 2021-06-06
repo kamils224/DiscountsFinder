@@ -1,4 +1,9 @@
+from typing import List
+
 from requests_html import HTMLSession
+
+from discounts_finder.parsers.products_finder.base import ParsedHtmlProduct
+from discounts_finder.parsers.products_finder.default import DefaultProductsFinder
 
 
 def get_dynamic_html(url: str, timeout: int = 20) -> str:
@@ -19,3 +24,13 @@ def get_dynamic_html(url: str, timeout: int = 20) -> str:
     session.close()
 
     return dynamic_html
+
+
+def get_products_from_url(url: str) -> List[ParsedHtmlProduct]:
+    html = get_dynamic_html(url)
+    products_finder = DefaultProductsFinder(html)
+    return products_finder.get_products()
+
+
+if __name__ == '__main__':
+    print(get_dynamic_html("https://promocje.x-kom.pl/euro-2020"))

@@ -14,8 +14,4 @@ def make_celery():
 celery = make_celery()
 
 celery.conf.beat_schedule = {
-    'add-every-monday-morning': {
-        'task': 'tasks.hello',
-        'schedule': 5.0,
-    },
 }
