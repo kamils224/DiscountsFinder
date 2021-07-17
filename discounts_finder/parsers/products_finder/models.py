@@ -8,8 +8,8 @@ import marshmallow_dataclass
 class ParsedHtmlProduct:
     url: str
     image_url: str
-    discount_price: Decimal
-    price: Decimal
+    discount_price: str
+    price: str
 
     @property
     def discount(self) -> int:

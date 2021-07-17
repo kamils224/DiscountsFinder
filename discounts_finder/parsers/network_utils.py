@@ -6,7 +6,7 @@ from discounts_finder.parsers.products_finder.base import ParsedHtmlProduct
 from discounts_finder.parsers.products_finder.default import DefaultProductsFinder
 
 
-def get_dynamic_html(url: str, timeout: int = 20) -> str:
+def get_dynamic_html(url: str, timeout: int = 60) -> str:
     """Downloads html dynamic content generated from javascript.
 
     Args:
@@ -33,4 +33,4 @@ def get_products_from_url(url: str) -> List[ParsedHtmlProduct]:
 
 
 if __name__ == '__main__':
-    print(get_dynamic_html("https://promocje.x-kom.pl/euro-2020"))
+    print(get_dynamic_html("https://www.x-kom.pl/g-6/c/15-monitory.html"))

@@ -1,12 +1,13 @@
 import re
 from dataclasses import dataclass
-from typing import List, Any, Optional
+from typing import List, Optional
 
 from bs4 import Tag
 
-from discounts_finder.parsers.products_finder.exceptions import ProductDivPatternNotFound
 from discounts_finder.parsers.products_finder.base import BaseProductsFinder, ParsedHtmlProduct
-from discounts_finder.parsers.products_finder.utils import price_text_to_decimal, is_anchor_with_url, get_image_url
+from discounts_finder.parsers.products_finder.exceptions import ProductDivPatternNotFound
+from discounts_finder.parsers.products_finder.utils import is_anchor_with_url, get_image_url, \
+    remove_letters
 
 
 @dataclass
@@ -49,7 +50,7 @@ def _get_anchor_tag(reference_tag: Tag):
 
 
 def _create_product(price_pairs: DivPricePair, image_tag: Tag, anchor_tag: Tag) -> Optional[ParsedHtmlProduct]:
-    prices = sorted([price_text_to_decimal(text) for text in price_pairs.price_text])
+    prices = sorted([remove_letters(text).replace(",", ".") for text in price_pairs.price_text])
     url = anchor_tag.attrs["href"]
     image_url = get_image_url(image_tag)
 

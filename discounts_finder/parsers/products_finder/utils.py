@@ -1,5 +1,4 @@
 import re
-from decimal import Decimal
 from typing import List, Tuple
 
 from bs4 import Tag
@@ -8,10 +7,6 @@ from validator_collection import validators
 
 def remove_letters(text: str) -> str:
     return re.sub(r"[^\d.,]", "", text)
-
-
-def price_text_to_decimal(text: str) -> Decimal:
-    return Decimal(remove_letters(text).replace(",", "."))
 
 
 def is_anchor_with_url(tag: Tag) -> bool:
