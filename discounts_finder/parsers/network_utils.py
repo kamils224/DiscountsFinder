@@ -1,7 +1,12 @@
+from typing import List
+
 from requests_html import HTMLSession
 
+from discounts_finder.parsers.products_finder.base import WebShopProductData
+from discounts_finder.parsers.products_finder.default import DefaultPolishProductsFinder
 
-def get_dynamic_html(url: str, timeout: int = 20) -> str:
+
+def get_dynamic_html(url: str, timeout: int = 60) -> str:
     """Downloads html dynamic content generated from javascript.
 
     Args:
@@ -19,3 +24,21 @@ def get_dynamic_html(url: str, timeout: int = 20) -> str:
     session.close()
 
     return dynamic_html
+
+
+def get_products_from_url(url: str) -> List[WebShopProductData]:
+    """
+    Return products found in the given url.
+    Args:
+        url (str): target url
+
+    Returns:
+        List[WebShopProductData]: List of parsed products.
+    """
+    html = get_dynamic_html(url)
+    products_finder = DefaultPolishProductsFinder(html)
+    return products_finder.get_products()
+
+
+if __name__ == '__main__':
+    print(get_dynamic_html("https://www.x-kom.pl/g-6/c/15-monitory.html"))
