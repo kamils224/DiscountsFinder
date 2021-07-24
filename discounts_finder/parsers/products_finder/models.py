@@ -4,7 +4,7 @@ import marshmallow_dataclass
 
 
 @dataclass
-class WebShopProductData:
+class WebShopProduct:
     url: str
     image_url: str
     discount_price: str
@@ -23,4 +23,4 @@ class WebShopProductData:
                f"discount : {self.discount}%"
 
 
-ProductSchema = marshmallow_dataclass.class_schema(WebShopProductData)
+WebShopProductSerializer = marshmallow_dataclass.class_schema(WebShopProduct)
