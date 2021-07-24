@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 
-import marshmallow_dataclass
-
-
 @dataclass
 class WebShopProduct:
     url: str
@@ -21,6 +18,3 @@ class WebShopProduct:
                f"price: {self.price}\n" \
                f"discount_price: {self.discount_price}\n" \
                f"discount : {self.discount}%"
-
-
-WebShopProductSerializer = marshmallow_dataclass.class_schema(WebShopProduct)

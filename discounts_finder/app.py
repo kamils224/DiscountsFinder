@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_script import Manager
 
-from discounts_finder.api.url_processing import ProductsUrlProcessing
+from discounts_finder.web.url_processing import ProductsUrlProcessing
 from discounts_finder.celery_init import make_celery
 from discounts_finder.mongo import mongo
 
