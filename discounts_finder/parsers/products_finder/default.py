@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from bs4 import Tag
 
-from discounts_finder.parsers.products_finder.base import BaseProductsFinder, ParsedHtmlProduct
+from discounts_finder.parsers.products_finder.base import BaseProductsFinder, WebShopProductData
 from discounts_finder.parsers.products_finder.exceptions import ProductDivPatternNotFound
 from discounts_finder.parsers.products_finder.utils import is_anchor_with_url, get_image_url, \
     remove_letters
@@ -49,15 +49,15 @@ def _get_anchor_tag(reference_tag: Tag):
     return anchor_tag_candidate
 
 
-def _create_product(price_pairs: DivPricePair, image_tag: Tag, anchor_tag: Tag) -> Optional[ParsedHtmlProduct]:
+def _create_product(price_pairs: DivPricePair, image_tag: Tag, anchor_tag: Tag) -> Optional[WebShopProductData]:
     prices = sorted([remove_letters(text).replace(",", ".") for text in price_pairs.price_text])
     url = anchor_tag.attrs["href"]
     image_url = get_image_url(image_tag)
 
-    return ParsedHtmlProduct(url, image_url, prices[0], prices[1])
+    return WebShopProductData(url, image_url, prices[0], prices[1])
 
 
-def _get_product_divs(price_divs: List[DivPricePair]) -> List[ParsedHtmlProduct]:
+def _get_product_divs(price_divs: List[DivPricePair]) -> List[WebShopProductData]:
     """
     Creates product entity based on found price tags.
     """
@@ -72,7 +72,7 @@ def _get_product_divs(price_divs: List[DivPricePair]) -> List[ParsedHtmlProduct]
     return results
 
 
-class DefaultProductsFinder(BaseProductsFinder):
+class DefaultPolishProductsFinder(BaseProductsFinder):
     CURRENCY = "zł"
 
     def _get_discount_price_divs(self) -> List[DivPricePair]:
@@ -86,7 +86,7 @@ class DefaultProductsFinder(BaseProductsFinder):
 
         return result_divs
 
-    def get_products(self) -> List[ParsedHtmlProduct]:
+    def get_products(self) -> List[WebShopProductData]:
         div_price_pairs = self._get_discount_price_divs()
         products = _get_product_divs(div_price_pairs)
         return products
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     with open(sferis, "r") as file:
         html_content = file.read()
 
-    products_finder = DefaultProductsFinder(html_content)
+    products_finder = DefaultPolishProductsFinder(html_content)
     result = products_finder.get_products()
     for p in result:
         print(p)

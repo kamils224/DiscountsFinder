@@ -1,11 +1,10 @@
 from dataclasses import dataclass
-from decimal import Decimal
 
 import marshmallow_dataclass
 
 
 @dataclass
-class ParsedHtmlProduct:
+class WebShopProductData:
     url: str
     image_url: str
     discount_price: str
@@ -24,4 +23,4 @@ class ParsedHtmlProduct:
                f"discount : {self.discount}%"
 
 
-ProductSchema = marshmallow_dataclass.class_schema(ParsedHtmlProduct)
+ProductSchema = marshmallow_dataclass.class_schema(WebShopProductData)

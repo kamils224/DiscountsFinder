@@ -4,7 +4,7 @@ from typing import List
 
 from bs4 import BeautifulSoup
 
-from discounts_finder.parsers.products_finder.models import ParsedHtmlProduct
+from discounts_finder.parsers.products_finder.models import WebShopProductData
 
 
 class BaseProductsFinder(metaclass=ABCMeta):
@@ -16,5 +16,5 @@ class BaseProductsFinder(metaclass=ABCMeta):
         self.parsed_html = BeautifulSoup(self.html_text, "html.parser")
 
     @abstractmethod
-    def get_products(self) -> List[ParsedHtmlProduct]:
+    def get_products(self) -> List[WebShopProductData]:
         raise NotImplementedError()
