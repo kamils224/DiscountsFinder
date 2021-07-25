@@ -61,11 +61,10 @@ class DefaultPolishProductsFinder(BaseProductsFinder):
 
 # only for testing
 if __name__ == "__main__":
-    morele_path = "../../../sandbox/html_samples/morele_sample.html"
-    xkom_path = "../../../sandbox/html_samples/xkom_sample.html"
-    sferis = "../../../sandbox/html_samples/sferis.html"
+    xkom_path = "../../tests/samples/xkom/discount_page_1.html"
+    sferis = "../../tests/samples/sferis/discount_page_1.html"
 
-    with open(sferis, "r") as file:
+    with open(xkom_path, "r") as file:
         html_content = file.read()
 
     products_finder = DefaultPolishProductsFinder(html_content)
