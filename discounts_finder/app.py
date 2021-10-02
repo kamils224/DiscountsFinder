@@ -2,8 +2,8 @@ from flask import Flask
 from flask_restful import Api
 from flask_script import Manager
 
-from discounts_finder.api.url_processing import ProductsUrlProcessing
-from discounts_finder.celery_init import make_celery
+from discounts_finder.api.url_processing import ProductsUrlProcessing, ProductsUrlProcessingQueue
+from discounts_finder.celery_queue.celery_init import make_celery
 from discounts_finder.mongo import mongo
 
 app = Flask(__name__)
@@ -15,7 +15,8 @@ mongo.init_app(app)
 manager = Manager(app)
 celery = make_celery()
 
-api.add_resource(ProductsUrlProcessing, "/api/products_url")
+api.add_resource(ProductsUrlProcessing, "/api/discounts-finder/single-page")
+api.add_resource(ProductsUrlProcessingQueue, "/api/discounts-finder/add-to-queue")
 
 if __name__ == "__main__":
     manager.run()

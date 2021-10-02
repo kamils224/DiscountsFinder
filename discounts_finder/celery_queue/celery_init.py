@@ -1,8 +1,6 @@
-import logging
-
 from celery import Celery
 
-from config import Config
+from discounts_finder.config import Config
 
 
 def make_celery():

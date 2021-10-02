@@ -2,8 +2,9 @@ from typing import List
 
 from requests_html import HTMLSession
 
-from discounts_finder.parsers.products_finder.base import WebShopProductData
-from discounts_finder.parsers.products_finder.default import DefaultPolishProductsFinder
+from discounts_finder.parsers.products_finder.base import BaseProductsFinder
+from discounts_finder.parsers.products_finder.default import DefaultProductsFinder
+from discounts_finder.parsers.products_finder.models import WebShopProduct
 
 
 def get_dynamic_html(url: str, timeout: int = 60) -> str:
@@ -26,17 +27,19 @@ def get_dynamic_html(url: str, timeout: int = 60) -> str:
     return dynamic_html
 
 
-def get_products_from_url(url: str) -> List[WebShopProductData]:
+def get_products_from_url(url: str, products_finder: BaseProductsFinder = None) -> List[WebShopProduct]:
     """
     Return products found in the given url.
     Args:
         url (str): target url
+        products_finder (BaseProductsFinder): if None, then DefaultProductsFinder is used
 
     Returns:
-        List[WebShopProductData]: List of parsed products.
+        List[WebShopProduct]: List of parsed products.
     """
     html = get_dynamic_html(url)
-    products_finder = DefaultPolishProductsFinder(html)
+    if products_finder is None:
+        products_finder = DefaultProductsFinder(html)
     return products_finder.get_products()
 
 

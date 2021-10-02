@@ -4,6 +4,8 @@ from typing import List, Tuple
 from bs4 import Tag
 from validator_collection import validators
 
+from discounts_finder.parsers.products_finder.exceptions import ProductDivPatternNotFound
+
 
 def remove_letters(text: str) -> str:
     return re.sub(r"[^\d.,]", "", text)
@@ -40,3 +42,35 @@ def get_matching_text(text_samples: List[str], pattern: str) -> List[Tuple[int, 
         (index, match.group(0)) for index, match in enumerate(matches) if match
     ]
     return matched_text
+
+
+def find_image_div(reference_tag: Tag) -> Tag:
+    image_style_pattern = re.compile(r"background-image: url\(.+\);")  # find image tag
+    img_tag_pattern = re.compile(r"https://.+")
+    parent = reference_tag
+    image_tags = parent.findAll("div", attrs={"style": image_style_pattern})
+    image_tags.extend(parent.findAll("img", attrs={"src": img_tag_pattern}))
+    while len(image_tags) == 0:
+        parent = parent.parent
+        if parent is None:
+            break
+        image_tags = parent.findAll("div", attrs={"style": image_style_pattern})
+        image_tags.extend(parent.findAll("img", attrs={"src": img_tag_pattern}))
+
+    if len(image_tags) != 1:
+        raise ProductDivPatternNotFound("Invalid image tag pattern")
+
+    return image_tags[0]
+
+
+def find_anchor_tag(reference_tag: Tag) -> Tag:
+    anchor_tag_candidate = reference_tag.parent
+    while not is_anchor_with_url(anchor_tag_candidate):
+        anchor_tag_candidate = anchor_tag_candidate.parent
+        if anchor_tag_candidate is None:
+            break
+
+    if anchor_tag_candidate is None:
+        raise ProductDivPatternNotFound("Invalid anchor tag pattern")
+
+    return anchor_tag_candidate
