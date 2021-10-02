@@ -1,4 +1,4 @@
-from celery_init import celery
+from discounts_finder.celery_queue.celery_init import celery
 
 
 @celery.task()

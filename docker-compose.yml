@@ -30,7 +30,7 @@ services:
     working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
-    command: celery -A celery_init.celery worker -l info --uid=nobody --gid=nogroup
+    command: celery -A celery_queue.celery_init.celery worker -l info --uid=nobody --gid=nogroup
     user: root
     depends_on:
       - redis
@@ -42,7 +42,7 @@ services:
     working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
-    command: celery -A celery_init.celery beat -l info
+    command: celery -A celery_queue.celery_init.celery beat -l info
     user: root
     depends_on:
       - redis

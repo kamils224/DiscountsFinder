@@ -2,8 +2,9 @@ from typing import List
 
 from requests_html import HTMLSession
 
-from discounts_finder.parsers.products_finder.base import WebShopProduct, BaseProductsFinder
+from discounts_finder.parsers.products_finder.base import BaseProductsFinder
 from discounts_finder.parsers.products_finder.default import DefaultProductsFinder
+from discounts_finder.parsers.products_finder.models import WebShopProduct
 
 
 def get_dynamic_html(url: str, timeout: int = 60) -> str:
