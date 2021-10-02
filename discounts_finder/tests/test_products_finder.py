@@ -6,7 +6,7 @@ from typing import Tuple, List
 import pytest
 import pandas as pd
 
-from discounts_finder.parsers.products_finder.default import DefaultPolishProductsFinder
+from discounts_finder.parsers.products_finder.default import DefaultProductsFinder
 from discounts_finder.parsers.products_finder.models import WebShopProduct
 
 SAMPLES_DIR = "samples"
@@ -30,7 +30,7 @@ def build_testing_paths() -> List[Tuple[str, str]]:
 def test_products_finder(input_path: str, ground_truth_path: str) -> None:
     with open(input_path, "r") as input_file:
         html_text = input_file.read()
-        products_finder = DefaultPolishProductsFinder(html_text)
+        products_finder = DefaultProductsFinder(html_text)
         products = products_finder.get_products()
 
     gt_result = pd.read_csv(ground_truth_path).to_dict("records")

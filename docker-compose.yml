@@ -7,7 +7,7 @@ services:
     volumes:
       - ./discounts_finder:/discounts_finder/
     ports:
-      - 5000:5000
+      - "5000:5000"
     env_file:
       - ./.env.dev
     depends_on:
@@ -30,7 +30,7 @@ services:
     working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
-    command: celery -A celery_init.celery worker -l info
+    command: celery -A celery_init.celery worker -l info --uid=nobody --gid=nogroup
     user: root
     depends_on:
       - redis

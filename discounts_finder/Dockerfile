@@ -19,4 +19,4 @@ RUN pip install -r requirements.txt
 
 ENV PYTHONPATH="$PYTHONPATH:/"
 
-COPY . /discounts_finder
+COPY . /app

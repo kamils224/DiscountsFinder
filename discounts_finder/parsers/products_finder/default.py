@@ -39,15 +39,16 @@ def _get_product_divs(price_divs: List[DivPricePair]) -> List[WebShopProduct]:
     return results
 
 
-class DefaultPolishProductsFinder(BaseProductsFinder):
+class DefaultProductsFinder(BaseProductsFinder):
     CURRENCY = "zł"
+    PRICE_REGEX = re.compile(BaseProductsFinder.PRICE_PATTERN + r"\s" + CURRENCY)
 
     def _get_discount_price_divs(self) -> List[DivPricePair]:
         divs = self.parsed_html.findAll("div")
-        price_regex = re.compile(self.PRICE_PATTERN + r"\s" + self.CURRENCY)
         result_divs = []
         for div in divs:
-            prices = re.findall(price_regex, div.text)
+            prices = re.findall(self.PRICE_REGEX, div.text)
+            # only two prices in div are correct
             if len(prices) == 2:
                 result_divs.append(DivPricePair(div, prices))
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
     with open(xkom_path, "r") as file:
         html_content = file.read()
 
-    products_finder = DefaultPolishProductsFinder(html_content)
+    products_finder = DefaultProductsFinder(html_content)
     result = products_finder.get_products()
     for p in result:
         print(p)
