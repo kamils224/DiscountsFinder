@@ -41,7 +41,3 @@ def get_products_from_url(url: str, products_finder: BaseProductsFinder = None) 
     if products_finder is None:
         products_finder = DefaultProductsFinder(html)
     return products_finder.get_products()
-
-
-if __name__ == '__main__':
-    print(get_dynamic_html("https://www.x-kom.pl/g-6/c/15-monitory.html"))
