@@ -2,14 +2,15 @@ version: '3.7'
 
 services:
   web:
-    build: ./discounts_finder/
-    command: gunicorn --bind 0.0.0.0:5000 app:app
+    build:
+      context: ./discounts_finder/
+      target: web
     volumes:
       - ./discounts_finder:/discounts_finder/
     ports:
       - "5000:5000"
     env_file:
-      - ./.env.dev
+      - ./discounts_finder/.env.dev
     depends_on:
       - redis
       - mongodb
@@ -19,7 +20,7 @@ services:
     restart: unless-stopped
     command: mongod --auth
     env_file:
-      - ./.env.dev
+      - ./discounts_finder/.env.dev
     volumes:
       - mongodbdata:/data/db
     ports:
@@ -30,24 +31,24 @@ services:
     working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
-    command: celery -A celery_queue.celery_init.celery worker -l info
+      target: celery_worker
     user: root
     depends_on:
       - redis
     env_file:
-      - ./.env.dev
+      - ./discounts_finder/.env.dev
     volumes:
       - ./discounts_finder:/discounts_finder
   celery-beat:
     working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
-    command: celery -A celery_queue.celery_init.celery beat -l info
+      target: celery_beat
     user: root
     depends_on:
       - redis
     env_file:
-      - ./.env.dev
+      - ./discounts_finder/.env.dev
     volumes:
       - ./discounts_finder:/discounts_finder
 volumes:

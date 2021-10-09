@@ -1,9 +1,16 @@
-FROM python:3.9.7-slim-buster
-
+FROM python:3.9.7-slim-buster as web
 WORKDIR /discounts_finder
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+COPY requirements.txt /discounts_finder/requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+ENV PYTHONPATH="$PYTHONPATH:/"
+
+ADD . /discounts_finder
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+############################################################
+FROM web as celery_worker
+WORKDIR /discounts_finder
 
 # Requirements for chromium
 RUN apt-get update && apt install -y gconf-service libasound2 libatk1.0-0 libc6 \
@@ -13,9 +20,11 @@ RUN apt-get update && apt install -y gconf-service libasound2 libatk1.0-0 libc6 
     libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 \
     libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 \
     libnss3 lsb-release xdg-utils wget
-COPY requirements.txt /discounts_finder/requirements.txt
-RUN pip install --upgrade pip && pip install pyppeteer && pyppeteer-install && pip install -r requirements.txt
 
-ENV PYTHONPATH="$PYTHONPATH:/"
+RUN pip install pyppeteer && pyppeteer-install
 
-ADD . /discounts_finder
+CMD ["celery", "-A", "celery_worker.celery_init.celery", "worker", "-l", "info"]
+############################################################
+FROM celery_worker as celery_beat
+WORKDIR /discounts_finder
+CMD ["celery", "-A", "celery_worker.celery_init.celery", "beat", "-l", "info"]

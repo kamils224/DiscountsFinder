@@ -2,9 +2,6 @@ Dockerfile
 .git
 /env
 __pycache__
-/sandbox
 
-README.md
-
-# Utils
-/sandbox
+# Tests
+/tests
