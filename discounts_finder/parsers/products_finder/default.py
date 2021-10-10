@@ -41,13 +41,15 @@ def _get_product_divs(price_divs: List[DivPricePair]) -> List[WebShopProduct]:
 
 class DefaultProductsFinder(BaseProductsFinder):
     CURRENCY = "zł"
-    PRICE_REGEX = re.compile(BaseProductsFinder.PRICE_PATTERN + r"\s" + CURRENCY)
+    PRICE_REGEX = re.compile(BaseProductsFinder.PRICE_PATTERN + r"\s?" + CURRENCY)
+    ZERO_PRICE_REGEX = re.compile(r"0(?:[.,]00)?\s?zł" + CURRENCY)
 
     def _get_discount_price_divs(self) -> List[DivPricePair]:
         divs = self.parsed_html.findAll("div")
         result_divs = []
         for div in divs:
             prices = re.findall(self.PRICE_REGEX, div.text)
+            prices = [price for price in prices if re.match(self.ZERO_PRICE_REGEX, price) is None]
             # only two prices in div are correct
             if len(prices) == 2:
                 result_divs.append(DivPricePair(div, prices))
@@ -62,13 +64,14 @@ class DefaultProductsFinder(BaseProductsFinder):
 
 # only for testing
 if __name__ == "__main__":
-    xkom_path = "../../tests/samples/xkom/discount_page_1.html"
-    sferis = "../../tests/samples/sferis/discount_page_1.html"
+    xkom_path = "../../tests/samples/x-kom/discount_page_1.html"
+    morele = "../../tests/samples/morele/discount_page_1.html"
 
-    with open(xkom_path, "r") as file:
+    with open(morele, "r") as file:
         html_content = file.read()
 
     products_finder = DefaultProductsFinder(html_content)
     result = products_finder.get_products()
     for p in result:
-        print(p)
+        if p.image_url == "https://images.morele.net/i256/6706132_0_i256.jpg":
+            print(p)
