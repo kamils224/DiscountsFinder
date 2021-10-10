@@ -37,13 +37,13 @@ def test_products_finder(input_path: str, ground_truth_path: str) -> None:
     gt_products = [WebShopProduct(
                     url=gt_product["url"],
                     image_url=gt_product["image_url"],
-                    price=str(gt_product["price"]),
-                    discount_price=str(gt_product["discount_price"])) for gt_product in gt_result]
+                    price=gt_product["price"],
+                    discount_price=gt_product["discount_price"]) for gt_product in gt_result]
     
     for p, gt in zip(products, gt_products):
         print(p.price)
         print(gt.price)
-        print(p.price == gt.price)
+        print(gt.price == p.price)
 
 
 if __name__ == '__main__':
