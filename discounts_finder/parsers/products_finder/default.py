@@ -73,5 +73,4 @@ if __name__ == "__main__":
     products_finder = DefaultProductsFinder(html_content)
     result = products_finder.get_products()
     for p in result:
-        if p.image_url == "https://images.morele.net/i256/6706132_0_i256.jpg":
-            print(p)
+        print(p)
