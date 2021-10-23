@@ -44,8 +44,3 @@ def test_products_finder(input_name: str, ground_truth_path: str) -> None:
 
     assert len(sorted_products) == len(sorted_gt_products)
     assert set(sorted_products) == set(sorted_gt_products)
-
-
-if __name__ == '__main__':
-    for input_path, gt_path in _build_testing_paths():
-        test_products_finder(input_path, gt_path)
