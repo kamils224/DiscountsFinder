@@ -60,17 +60,3 @@ class DefaultProductsFinder(BaseProductsFinder):
         div_price_pairs = self._get_discount_price_divs()
         products = _get_product_divs(div_price_pairs)
         return list(set(products))
-
-
-# only for testing
-if __name__ == "__main__":
-    xkom_path = "../../tests/samples/x-kom/discount_page_1.html"
-    morele = "../../tests/samples/morele/discount_page_1.html"
-
-    with open(morele, "r") as file:
-        html_content = file.read()
-
-    products_finder = DefaultProductsFinder(html_content)
-    result = products_finder.get_products()
-    for p in result:
-        print(p)
