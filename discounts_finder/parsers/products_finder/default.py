@@ -59,7 +59,7 @@ class DefaultProductsFinder(BaseProductsFinder):
     def get_products(self) -> List[WebShopProduct]:
         div_price_pairs = self._get_discount_price_divs()
         products = _get_product_divs(div_price_pairs)
-        return products
+        return list(set(products))
 
 
 # only for testing
