@@ -4,8 +4,7 @@ from discounts_finder.config import Config
 
 
 def make_celery():
-    app = Celery(__name__, broker=Config.CELERY_BROKER_URL)
-    app.config_from_object(Config)
+    app = Celery(__name__, config_source=Config)
     return app
 
 
