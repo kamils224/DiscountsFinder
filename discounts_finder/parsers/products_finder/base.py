@@ -1,5 +1,5 @@
 import re
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from typing import List
 
 from bs4 import BeautifulSoup
@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from discounts_finder.parsers.products_finder.models import WebShopProduct
 
 
-class BaseProductsFinder(metaclass=ABCMeta):
+class BaseProductsFinder(ABC):
     PRICE_PATTERN = r"\d{1,3}(?:\s?\d{3})*(?:[.,]\d{2})?"
     PRICE_REGEX = re.compile(PRICE_PATTERN)
 
