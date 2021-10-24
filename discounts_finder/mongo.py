@@ -17,12 +17,10 @@ def get_mongo_db():
 mongo_db = get_mongo_db()
 
 
-class MongoConnector:
-    # Document names
-    TEMPORARY_PRODUCTS = "temp_products"
+class MongoCollection:
 
-    def __init__(self, document_name: str):
-        self._document_name = document_name
+    def __init__(self, collection_name: str):
+        self._collection_name = collection_name
 
     def add_object(self, obj: Dict[str, Any]):
-        return mongo_db[self._document_name].insert_one(obj)
+        return mongo_db[self._collection_name].insert_one(obj)
