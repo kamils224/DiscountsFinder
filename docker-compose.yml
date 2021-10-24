@@ -22,7 +22,7 @@ services:
     env_file:
       - ./discounts_finder/.env.dev
     volumes:
-      - mongodbdata:/data/db
+      - ./data:/data/db
     ports:
       - "27017:27017"
   redis:
@@ -51,6 +51,3 @@ services:
       - ./discounts_finder/.env.dev
     volumes:
       - ./discounts_finder:/discounts_finder
-volumes:
-  mongodbdata:
-    driver: local
