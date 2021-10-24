@@ -17,7 +17,6 @@ services:
   mongodb:
     image: mongo:4.4.5-bionic
     container_name: mongodb
-    restart: unless-stopped
     command: mongod --auth
     env_file:
       - ./discounts_finder/.env.dev
