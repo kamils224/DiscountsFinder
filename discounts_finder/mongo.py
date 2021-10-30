@@ -30,7 +30,5 @@ class MongoCollection:
     def update_by_id(self, object_id: str, obj_to_update: Dict[str, Any]):
         return self._collection.update_one({"_id": ObjectId(object_id)}, {"$set": obj_to_update})
 
-    def get_by_id(self, object_id, fields_filter: Optional[Dict[str, int]] = None):
-        if fields_filter is not None:
-            return self._collection.find_one({"_id": ObjectId(object_id)}, fields_filter)
+    def get_by_id(self, object_id):
         return self._collection.find_one({"_id": ObjectId(object_id)})

@@ -14,4 +14,3 @@ def process_products_url(object_id: str, url: str) -> None:
     products_tasks_repository.set_products_result(object_id, products)
 
     logging.info("Task completed")
-    logging.info(products)
