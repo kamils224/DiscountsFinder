@@ -1,4 +1,3 @@
-import logging
 from dataclasses import asdict, dataclass
 from typing import Optional, List
 
@@ -53,5 +52,5 @@ class ProductsTaskRepository:
 
     def get_products_result(self, object_id) -> ProductsTaskRead:
         products_task = self._mongo_collection.get_by_id(object_id)
-        products_task["_id"] = str(products_task["_id"])
-        return ProductsTaskRead(**products_task)
+        _id = str(products_task.pop("_id"))
+        return ProductsTaskRead(_id=_id, **products_task)
