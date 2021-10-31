@@ -32,3 +32,6 @@ class MongoCollection:
 
     def get_by_id(self, object_id):
         return self._collection.find_one({"_id": ObjectId(object_id)})
+
+    def get_collection(self):
+        return self._collection
