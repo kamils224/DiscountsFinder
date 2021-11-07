@@ -1,6 +1,6 @@
 import {Button, Table} from "antd";
 import {useEffect, useState} from "react";
-import ProductsTasksApi, { ProductsTasksDto } from "../api/products-tasks";
+import ProductsTasksApi, { ProductsTasks } from "../api/products-tasks";
 
 const columns = [
     {
@@ -42,7 +42,7 @@ const columns = [
     },
 ];
 
-const productsTasksDisplay = (productsTasks: ProductsTasksDto): Record<string, any> => {
+const productsTasksDisplay = (productsTasks: ProductsTasks): Record<string, any> => {
     const created = new Date(productsTasks.timestamp * 1000);
     return {
         id: productsTasks.id,
@@ -53,10 +53,10 @@ const productsTasksDisplay = (productsTasks: ProductsTasksDto): Record<string, a
     }
 }
 
-export default function TasksList() {
+export default function ProductsTasksList() {
     const [tasks, setTasks] = useState<Array<Record<string, any>>>([]);
 
-    async function fetchTasks(): Promise<Array<ProductsTasksDto>> {
+    async function fetchTasks(): Promise<Array<ProductsTasks>> {
         const api = new ProductsTasksApi();
         return await api.getProductsTasks();
 

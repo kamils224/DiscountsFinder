@@ -1,6 +1,6 @@
 import axiosInstance from "../axios-config/axios.instance";
 
-export class ProductsTasksDto {
+export class ProductsTasks {
     constructor(public id: number,
                 public timestamp: number,
                 public status: string,
@@ -9,8 +9,34 @@ export class ProductsTasksDto {
     }
 
     static fromJson(json: Record<string, any>) {
-        return new ProductsTasksDto(json._id, json.timestamp,
+        return new ProductsTasks(json._id, json.timestamp,
             json.status, json.page_url, json.count);
+    }
+}
+
+class DiscountProduct {
+    constructor(public url: string, public imageUrl: string, public discountPrice: string, public price: string) {
+    }
+
+    static fromJson(json: Record<string, any>) {
+        return new DiscountProduct(json.url, json.image_url, json.discount_price, json.price);
+    }
+}
+
+class ProductsTaskResult extends ProductsTasks {
+    constructor(public id: number,
+                public timestamp: number,
+                public status: string,
+                public pageUrl: string,
+                public count: number,
+                public results: Array<DiscountProduct>) {
+        super(id, timestamp, status, pageUrl, count);
+    }
+
+    static fromJson(json: Record<string, any>) {
+        return new ProductsTaskResult(json._id, json.timestamp,
+            json.status, json.page_url, json.count,
+            json.results.map((item: Record<string, any>) => DiscountProduct.fromJson(item)))
     }
 }
 
@@ -18,8 +44,13 @@ export default class ProductsTasksApi {
 
     baseUrl = "/api/discounts-finder/single-url-result";
 
-    async getProductsTasks(): Promise<Array<ProductsTasksDto>> {
+    async getProductsTasks(): Promise<Array<ProductsTasks>> {
         const response = await axiosInstance.get(this.baseUrl);
-        return response.data.map((item: Record<string, any>) => ProductsTasksDto.fromJson(item));
+        return response.data.map((item: Record<string, any>) => ProductsTasks.fromJson(item));
     }
+    async getProductTaskResult(taskId: string): Promise<ProductsTaskResult> {
+        const response = await axiosInstance.get(`${this.baseUrl}/${taskId}`);
+        return ProductsTaskResult.fromJson(response.data);
+    }
+
 }
