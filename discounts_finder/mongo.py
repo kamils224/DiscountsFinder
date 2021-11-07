@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 from bson import ObjectId
 
 from discounts_finder.config import Config
@@ -35,3 +35,8 @@ class MongoCollection:
 
     def get_collection(self):
         return self._collection
+
+    def all(self, exclude: Optional[List[str]] = None):
+        if exclude is None:
+            return self._collection.find({})
+        return self._collection.find({}, {field: False for field in exclude})

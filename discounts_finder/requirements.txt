@@ -18,6 +18,7 @@ click-repl==0.1.6
 cssselect==1.1.0
 fake-useragent==0.1.11
 Flask==1.1.2
+Flask-Cors==1.10.3
 flask-marshmallow==0.14.0
 Flask-PyMongo==2.3.0
 flask-rest-paginate==1.1.2

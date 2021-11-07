@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List
 
 from discounts_finder.celery_worker.tasks import process_products_url
 from discounts_finder.repositories.products_tasks_repository import ProductsTaskRepository, ProductsTaskCreate, \
@@ -33,3 +34,6 @@ class DiscountsFinderService:
 
     def get_single_url_result(self, object_id: str) -> ProductsTaskRead:
         return self._tasks_repository.get_products_result(object_id)
+
+    def get_single_url_tasks(self) -> List[ProductsTaskRead]:
+        return self._tasks_repository.get_products_tasks()

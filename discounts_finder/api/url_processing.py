@@ -24,6 +24,13 @@ class DiscountFinderJob(Resource):
     def get(object_id: str):
         task_service = DiscountsFinderService()
         result = task_service.get_single_url_result(object_id)
-        print("result get")
-        print(result)
         return asdict(result)
+
+
+class DiscountsFinderTasksList(Resource):
+
+    @staticmethod
+    def get():
+        task_service = DiscountsFinderService()
+        result = task_service.get_single_url_tasks()
+        return [asdict(item) for item in result]
