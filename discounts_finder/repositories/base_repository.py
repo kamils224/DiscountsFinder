@@ -3,7 +3,6 @@ from typing import Any, Union, Dict
 
 
 class BaseRepository(metaclass=ABCMeta):
-
     def create(self, obj: Any):
         raise NotImplementedError()
 

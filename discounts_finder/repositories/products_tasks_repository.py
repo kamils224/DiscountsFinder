@@ -39,14 +39,13 @@ class ProductsTaskRepository(BaseRepository):
         _id = str(products_task.pop("_id"))
         return ProductsTaskRead(_id=_id, **products_task)
 
-    def update(self, obj_id: Union[str, int], fields: Dict[str, Any], allow_none: bool = False):
+    def update(
+        self, obj_id: Union[str, int], fields: Dict[str, Any], allow_none: bool = False
+    ):
         update_query = fields
         if not allow_none:
             update_query = {k: v for k, v in update_query if v is not None}
-        return self._mongo_collection.update_by_id(
-            obj_id,
-            update_query
-        )
+        return self._mongo_collection.update_by_id(obj_id, update_query)
 
     def delete(self, obj_id: Union[str, int]):
         raise NotImplementedError()

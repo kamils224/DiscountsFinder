@@ -4,7 +4,9 @@ from typing import List, Tuple
 from bs4 import Tag
 from validator_collection import validators
 
-from discounts_finder.parsers.products_finder.exceptions import ProductDivPatternNotFound
+from discounts_finder.parsers.products_finder.exceptions import (
+    ProductDivPatternNotFound,
+)
 
 
 def remove_letters(text: str) -> str:
