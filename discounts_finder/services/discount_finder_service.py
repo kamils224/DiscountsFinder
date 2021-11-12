@@ -15,7 +15,7 @@ class TaskResult:
 class DiscountsFinderService:
 
     def __init__(self):
-        self._tasks_repository = ProductsTaskRepository()
+        self._products_tasks_repo = ProductsTaskRepository()
 
     def process_single_url(self, url: str) -> TaskResult:
         task = ProductsTaskCreate(
@@ -25,11 +25,11 @@ class DiscountsFinderService:
             results=None,
             count=0
         )
-        result = self._tasks_repository.add_products_task(task)
-        task_result = TaskResult(str(result.inserted_id), task.status)
+        result_id = self._products_tasks_repo.create(task)
+        task_result = TaskResult(result_id, task.status)
         process_products_url.delay(task_result.id, url)
 
         return task_result
 
     def get_single_url_result(self, object_id: str) -> ProductsTaskRead:
-        return self._tasks_repository.get_products_result(object_id)
+        return self._products_tasks_repo.read(object_id)

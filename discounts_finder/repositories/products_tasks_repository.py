@@ -1,8 +1,9 @@
 from dataclasses import asdict, dataclass
-from typing import Optional, List
+from typing import Optional, List, Any, Union, Dict
 
 from discounts_finder.mongo import MongoCollection
 from discounts_finder.parsers.products_finder.models import WebShopProduct
+from discounts_finder.repositories.base_repository import BaseRepository
 
 
 @dataclass
@@ -23,34 +24,32 @@ class ProductsTaskRead(ProductsTaskCreate):
     _id: str
 
 
-@dataclass
-class ProductsTaskUpdate(ProductsTaskRead):
-    page_url: Optional[str] = None
-    status: Optional[str] = None
-    results: Optional[List[WebShopProduct]] = None
-    timestamp: Optional[float] = None
-    count: Optional[int] = None
-    _id: Optional[str] = None
-
-
-class ProductsTaskRepository:
+class ProductsTaskRepository(BaseRepository):
     COLLECTION_NAME = "discounts_finder_tasks"
 
     def __init__(self):
         self._mongo_collection = MongoCollection(self.COLLECTION_NAME)
 
-    def add_products_task(self, products_task: ProductsTaskCreate):
-        return self._mongo_collection.add_object(asdict(products_task))
+    def create(self, obj: ProductsTaskCreate) -> Union[str, int]:
+        created = self._mongo_collection.add_object(asdict(obj))
+        return str(created.inserted_id)
 
-    def set_products_result(self, object_id: str, products: List[WebShopProduct]):
-        updated = ProductsTaskUpdate(results=products, count=len(products), status=ProductsTaskUpdate.STATUS_COMPLETED)
-        update_query = {k: v for k, v in asdict(updated).items() if v is not None}
+    def read(self, obj_id: Union[str, int]) -> ProductsTaskRead:
+        products_task = self._mongo_collection.get_by_id(obj_id)
+        _id = str(products_task.pop("_id"))
+        return ProductsTaskRead(_id=_id, **products_task)
+
+    def update(self, obj_id: Union[str, int], fields: Dict[str, Any], allow_none: bool = False):
+        update_query = fields
+        if not allow_none:
+            update_query = {k: v for k, v in update_query if v is not None}
         return self._mongo_collection.update_by_id(
-            object_id,
+            obj_id,
             update_query
         )
 
-    def get_products_result(self, object_id) -> ProductsTaskRead:
-        products_task = self._mongo_collection.get_by_id(object_id)
-        _id = str(products_task.pop("_id"))
-        return ProductsTaskRead(_id=_id, **products_task)
+    def delete(self, obj_id: Union[str, int]):
+        raise NotImplementedError()
+
+    def read_all(self):
+        raise NotImplementedError()
