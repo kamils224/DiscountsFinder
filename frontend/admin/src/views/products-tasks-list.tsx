@@ -1,6 +1,6 @@
 import {Button, Table} from "antd";
 import {useEffect, useState} from "react";
-import ProductsTasksApi, { ProductsTasks } from "../api/products-tasks";
+import productsTasksApi, {ProductsTasks} from "../api/products-tasks";
 
 const columns = [
     {
@@ -56,13 +56,11 @@ const productsTasksDisplay = (productsTasks: ProductsTasks): Record<string, any>
 export default function ProductsTasksList() {
     const [tasks, setTasks] = useState<Array<Record<string, any>>>([]);
 
-    async function fetchTasks(): Promise<Array<ProductsTasks>> {
-        const api = new ProductsTasksApi();
-        return await api.getProductsTasks();
-
-    }
 
     useEffect(() => {
+            async function fetchTasks(): Promise<Array<ProductsTasks>> {
+        return await productsTasksApi.getProductsTasks();
+    }
         fetchTasks().then(result => {
             setTasks(result.map((item) => productsTasksDisplay(item)))
         });

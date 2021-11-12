@@ -10,7 +10,7 @@ def process_products_url(object_id: str, url: str) -> None:
     products = get_products_from_url(url)
     products_tasks_repository = ProductsTaskRepository()
 
-    logging.info(f"Updating task result for {object_id}")
+    logging.info(f"Updating ProductsTask result for {object_id}")
     products_tasks_repository.set_products_result(object_id, products)
 
     logging.info("Task completed")

@@ -14,7 +14,7 @@ export class ProductsTasks {
     }
 }
 
-class DiscountProduct {
+export class DiscountProduct {
     constructor(public url: string, public imageUrl: string, public discountPrice: string, public price: string) {
     }
 
@@ -23,7 +23,7 @@ class DiscountProduct {
     }
 }
 
-class ProductsTaskResult extends ProductsTasks {
+export class ProductsTaskResult extends ProductsTasks {
     constructor(public id: number,
                 public timestamp: number,
                 public status: string,
@@ -40,7 +40,7 @@ class ProductsTaskResult extends ProductsTasks {
     }
 }
 
-export default class ProductsTasksApi {
+class ProductsTasksApi {
 
     baseUrl = "/api/discounts-finder/single-url-result";
 
@@ -52,5 +52,6 @@ export default class ProductsTasksApi {
         const response = await axiosInstance.get(`${this.baseUrl}/${taskId}`);
         return ProductsTaskResult.fromJson(response.data);
     }
-
 }
+
+export default new ProductsTasksApi();
