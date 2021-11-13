@@ -25,7 +25,9 @@ def get_products_from_file(input_path: str) -> List[WebShopProduct]:
     return DefaultProductsFinder(html_content).get_products()
 
 
-def save_products_to_csv(input_path: Union[str, List[str]], output_dir: str, output_prefix: str = "result"):
+def save_products_to_csv(
+    input_path: Union[str, List[str]], output_dir: str, output_prefix: str = "result"
+):
     paths = input_path
     if isinstance(input_path, str):
         paths = [input_path]
@@ -41,8 +43,13 @@ def save_products_to_csv(input_path: Union[str, List[str]], output_dir: str, out
         logging.info(f"{logging_title}Found {len(products)} products")
 
         df = pd.DataFrame(
-            [[product.url, product.image_url, product.discount_price, product.price] for product in products],
-            index=None, columns=["url", "image_url", "discount_price", "price"])
+            [
+                [product.url, product.image_url, product.discount_price, product.price]
+                for product in products
+            ],
+            index=None,
+            columns=["url", "image_url", "discount_price", "price"],
+        )
 
         output_path = os.path.join(output_dir, output_prefix + f"_{index}.csv")
         df.to_csv(output_path, index=False, header=True)
@@ -50,7 +57,7 @@ def save_products_to_csv(input_path: Union[str, List[str]], output_dir: str, out
         logging.info(f"{logging_title}Saved to: {output_path}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str, help="Directory or single html file")
     parser.add_argument("--output", type=str, help="Result directory")
@@ -59,7 +66,9 @@ if __name__ == '__main__':
 
     input_name = args.input
     if os.path.isdir(args.input):
-        input_name = [os.path.join(args.input, filename) for filename in os.listdir(args.input)]
+        input_name = [
+            os.path.join(args.input, filename) for filename in os.listdir(args.input)
+        ]
 
     path = args.input if not os.path.isdir(args.input) else os.listdir(args.input)
     try:

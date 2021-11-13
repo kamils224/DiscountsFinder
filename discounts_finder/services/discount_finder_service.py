@@ -2,8 +2,11 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from discounts_finder.celery_worker.tasks import process_products_url
-from discounts_finder.repositories.products_tasks_repository import ProductsTaskRepository, ProductsTaskCreate, \
-    ProductsTaskRead
+from discounts_finder.repositories.products_tasks_repository import (
+    ProductsTaskRepository,
+    ProductsTaskCreate,
+    ProductsTaskRead,
+)
 
 
 @dataclass
@@ -13,9 +16,8 @@ class TaskResult:
 
 
 class DiscountsFinderService:
-
     def __init__(self):
-        self._tasks_repository = ProductsTaskRepository()
+        self._products_tasks_repo = ProductsTaskRepository()
 
     def process_single_url(self, url: str) -> TaskResult:
         task = ProductsTaskCreate(
@@ -23,13 +25,13 @@ class DiscountsFinderService:
             status=ProductsTaskCreate.STATUS_PROCESSING,
             timestamp=datetime.timestamp(datetime.now()),
             results=None,
-            count=0
+            count=0,
         )
-        result = self._tasks_repository.add_products_task(task)
-        task_result = TaskResult(str(result.inserted_id), task.status)
+        result_id = self._products_tasks_repo.create(task)
+        task_result = TaskResult(result_id, task.status)
         process_products_url.delay(task_result.id, url)
 
         return task_result
 
     def get_single_url_result(self, object_id: str) -> ProductsTaskRead:
-        return self._tasks_repository.get_products_result(object_id)
+        return self._products_tasks_repo.read(object_id)

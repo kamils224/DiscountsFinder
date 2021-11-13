@@ -4,10 +4,19 @@ from typing import List, Optional
 
 from bs4 import Tag
 
-from discounts_finder.parsers.products_finder.base import BaseProductsFinder, WebShopProduct
-from discounts_finder.parsers.products_finder.exceptions import ProductDivPatternNotFound
-from discounts_finder.parsers.products_finder.utils import get_image_url, remove_letters, find_image_div, \
-    find_anchor_tag
+from discounts_finder.parsers.products_finder.base import (
+    BaseProductsFinder,
+    WebShopProduct,
+)
+from discounts_finder.parsers.products_finder.exceptions import (
+    ProductDivPatternNotFound,
+)
+from discounts_finder.parsers.products_finder.utils import (
+    get_image_url,
+    remove_letters,
+    find_image_div,
+    find_anchor_tag,
+)
 
 
 @dataclass
@@ -16,8 +25,12 @@ class DivPricePair:
     price_text: List[str]
 
 
-def _create_product(price_pairs: DivPricePair, image_tag: Tag, anchor_tag: Tag) -> Optional[WebShopProduct]:
-    prices = sorted([remove_letters(text).replace(",", ".") for text in price_pairs.price_text])
+def _create_product(
+    price_pairs: DivPricePair, image_tag: Tag, anchor_tag: Tag
+) -> Optional[WebShopProduct]:
+    prices = sorted(
+        [remove_letters(text).replace(",", ".") for text in price_pairs.price_text]
+    )
     url = anchor_tag.attrs["href"]
     image_url = get_image_url(image_tag)
 
@@ -49,7 +62,11 @@ class DefaultProductsFinder(BaseProductsFinder):
         result_divs = []
         for div in divs:
             prices = re.findall(self.PRICE_REGEX, div.text)
-            prices = [price for price in prices if re.match(self.ZERO_PRICE_REGEX, price) is None]
+            prices = [
+                price
+                for price in prices
+                if re.match(self.ZERO_PRICE_REGEX, price) is None
+            ]
             # only two prices in div are correct
             if len(prices) == 2:
                 result_divs.append(DivPricePair(div, prices))
