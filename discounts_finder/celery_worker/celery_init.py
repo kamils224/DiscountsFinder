@@ -10,5 +10,4 @@ def make_celery():
 
 celery = make_celery()
 
-celery.conf.beat_schedule = {
-}
+celery.conf.beat_schedule = {}

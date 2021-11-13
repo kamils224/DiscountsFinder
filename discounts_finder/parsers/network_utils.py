@@ -27,7 +27,9 @@ def get_dynamic_html(url: str, timeout: int = 60) -> str:
     return dynamic_html
 
 
-def get_products_from_url(url: str, products_finder: BaseProductsFinder = None) -> List[WebShopProduct]:
+def get_products_from_url(
+    url: str, products_finder: BaseProductsFinder = None
+) -> List[WebShopProduct]:
     """
     Return products found in the given url.
     Args:

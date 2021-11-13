@@ -1,88 +1,71 @@
 from dataclasses import asdict, dataclass
-from typing import Optional, List, Any, Dict
+from typing import Optional, List, Any, Union, Dict
 
 from discounts_finder.mongo import MongoCollection
 from discounts_finder.parsers.products_finder.models import WebShopProduct
+from discounts_finder.repositories.base_repository import BaseRepository, BaseDto
 
 
 @dataclass
-class ProductsTaskCreate:
+class ProductsTaskCreate(BaseDto):
     STATUS_COMPLETED = "COMPLETED"
     STATUS_PROCESSING = "PROCESSING"
     STATUS_FAILED = "FAILED"
 
     page_url: str
     status: str
-    results: Optional[List[WebShopProduct]]
     timestamp: float
     count: int
+    results: Optional[List[WebShopProduct]] = None
 
     @classmethod
-    def from_dict(cls, dict_obj: Dict[str, Any]):
+    def from_dict(cls, dict_obj: Dict[str, Any]) -> ["ProductsTaskCreate"]:
         return cls(**dict_obj)
 
 
 @dataclass
 class ProductsTaskRead(ProductsTaskCreate):
-    _id: str
-
-    @classmethod
-    def from_dict(cls, dict_obj: Dict[str, Any]):
-        _id = str(dict_obj.pop("_id"))
-        return cls(_id=_id, **dict_obj)
-
-
-@dataclass
-class ProductsTaskUpdate(ProductsTaskRead):
-    _id: Optional[str] = None
+    _id: str = None
     page_url: Optional[str] = None
     status: Optional[str] = None
-    results: Optional[List[WebShopProduct]] = None
     timestamp: Optional[float] = None
     count: Optional[int] = None
-
-
-@dataclass
-class ProductsTaskListItem:
-    _id: str
-    page_url: str
-    status: str
-    timestamp: float
-    count: int
+    results: Optional[List[WebShopProduct]] = None
 
     @classmethod
-    def from_dict(cls, dict_obj: Dict[str, Any]):
+    def from_dict(cls, dict_obj: Dict[str, Any]) -> ["ProductsTaskRead"]:
         _id = str(dict_obj.pop("_id"))
         return cls(_id=_id, **dict_obj)
 
 
-def create_products_task_dto(mongo_result) -> ProductsTaskRead:
-    _id = str(mongo_result.pop("_id"))
-    return ProductsTaskRead(_id=_id, **mongo_result)
-
-
-class ProductsTaskRepository:
+class ProductsTaskRepository(BaseRepository):
     COLLECTION_NAME = "discounts_finder_tasks"
 
     def __init__(self):
         self._mongo_collection = MongoCollection(self.COLLECTION_NAME)
 
-    def add_products_task(self, products_task: ProductsTaskCreate):
-        return self._mongo_collection.add_object(asdict(products_task))
+    def create(self, obj: ProductsTaskCreate) -> Union[str, int]:
+        created = self._mongo_collection.add_object(asdict(obj))
+        return str(created.inserted_id)
 
-    def set_products_result(self, object_id: str, products: List[WebShopProduct]):
-        updated = ProductsTaskUpdate(results=products, count=len(products), status=ProductsTaskUpdate.STATUS_COMPLETED)
-        update_query = {k: v for k, v in asdict(updated).items() if v is not None}
-        return self._mongo_collection.update_by_id(
-            object_id,
-            update_query
-        )
+    def read(self, obj_id: Union[str, int]) -> ProductsTaskRead:
+        products_task = self._mongo_collection.get_by_id(obj_id)
+        return ProductsTaskRead.from_dict(products_task)
 
-    def get_products_result(self, object_id) -> ProductsTaskRead:
-        products_task = self._mongo_collection.get_by_id(object_id)
-        _id = str(products_task.pop("_id"))
-        return ProductsTaskRead(_id=_id, **products_task)
+    def update(
+        self, obj_id: Union[str, int], fields: Dict[str, Any], allow_none: bool = False
+    ) -> Union[str, int]:
+        update_query = fields
+        if not allow_none:
+            update_query = {k: v for k, v in update_query.items() if v is not None}
+        updated = self._mongo_collection.update_by_id(obj_id, update_query)
+        return updated.upserted_id
 
-    def get_products_tasks(self):
-        products_tasks = self._mongo_collection.all(exclude=["results"])
-        return [ProductsTaskListItem.from_dict(product_task) for product_task in products_tasks]
+    def delete(self, obj_id: Union[str, int]):
+        raise NotImplementedError()
+
+    def read_all(self, exclude_fields: List[str] = None) -> List[ProductsTaskRead]:
+        products_tasks = self._mongo_collection.all(exclude=exclude_fields)
+        return [
+            ProductsTaskRead.from_dict(product_task) for product_task in products_tasks
+        ]

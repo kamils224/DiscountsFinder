@@ -42,7 +42,7 @@ export class ProductsTaskResult extends ProductsTasks {
 
 class ProductsTasksApi {
 
-    baseUrl = "/api/discounts-finder/single-url-result";
+    baseUrl = "/api/discounts-finder/discounts-tasks";
 
     async getProductsTasks(): Promise<Array<ProductsTasks>> {
         const response = await axiosInstance.get(this.baseUrl);

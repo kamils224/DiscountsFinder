@@ -7,7 +7,6 @@ from discounts_finder.services.discount_finder_service import DiscountsFinderSer
 
 
 class DiscountFinderJob(Resource):
-
     @staticmethod
     def post():
         parser = reqparse.RequestParser()
@@ -28,7 +27,6 @@ class DiscountFinderJob(Resource):
 
 
 class DiscountsFinderTasksList(Resource):
-
     @staticmethod
     def get():
         task_service = DiscountsFinderService()
