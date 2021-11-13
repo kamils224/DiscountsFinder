@@ -16,6 +16,7 @@ class ProductsTaskCreate(BaseDto):
     status: str
     timestamp: float
     count: int
+    results_timestamp: Optional[float] = None
     results: Optional[List[WebShopProduct]] = None
 
     @classmethod

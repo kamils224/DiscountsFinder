@@ -25,6 +25,7 @@ class DiscountsFinderService:
             page_url=url,
             status=ProductsTaskCreate.STATUS_PROCESSING,
             timestamp=datetime.timestamp(datetime.now()),
+            results_timestamp=None,
             results=None,
             count=0,
         )

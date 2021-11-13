@@ -1,5 +1,6 @@
 import logging
 from dataclasses import asdict
+from datetime import datetime
 
 from discounts_finder.celery_worker.celery_init import celery
 from discounts_finder.parsers.network_utils import get_products_from_url
@@ -19,6 +20,7 @@ def process_products_url(object_id: str, url: str) -> None:
     products_tasks_repository.update(
         object_id,
         {
+            "results_timestamp": datetime.timestamp(datetime.now()),
             "results": [asdict(product) for product in products],
             "count": len(products),
             "status": ProductsTaskRead.STATUS_COMPLETED,
