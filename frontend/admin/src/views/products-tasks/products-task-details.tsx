@@ -20,7 +20,15 @@ export default function ProductsTaskDetails() {
     }, [params])
 
     const productItems = products?.results.map(
-        (item, index) => <Col xs={24} md={8} xl={6} key={`item-${index}`}>{item.url}</Col>
+        (item, index) => (
+            <Col xs={24} md={8} xl={6} key={`item-${index}`}>
+                {item.url}
+                <br />
+                {item.imageUrl}
+                <br />
+                {item.discountPrice} - {item.price}
+            </Col>
+        )
     )
 
     return (

@@ -1,5 +1,6 @@
 import {Button, Table} from "antd";
 import {useEffect, useState} from "react";
+import { Link } from "react-router-dom";
 import productsTasksApi, { ProductsTasks } from "../../api/products-tasks";
 
 const columns = [
@@ -36,8 +37,8 @@ const columns = [
     {
         title: "Action",
         key: 'action',
-        render: () => (
-            <Button type="primary">Show results</Button>
+        render: (_: string, record: Record<string, any>) => (
+            <Button type="primary"><Link to={`/tasks/${record.id}`}>Show results</Link></Button>
         )
     },
 ];
