@@ -14,12 +14,12 @@ export class ProductsTasks {
     }
 }
 
-export class DiscountProduct {
+export class ProductItem {
     constructor(public url: string, public imageUrl: string, public discountPrice: string, public price: string) {
     }
 
     static fromJson(json: Record<string, any>) {
-        return new DiscountProduct(json.url, json.image_url, json.discount_price, json.price);
+        return new ProductItem(json.url, json.image_url, json.discount_price, json.price);
     }
 }
 
@@ -29,14 +29,14 @@ export class ProductsTaskResult extends ProductsTasks {
                 public status: string,
                 public pageUrl: string,
                 public count: number,
-                public results: Array<DiscountProduct>) {
+                public results: Array<ProductItem>) {
         super(id, timestamp, status, pageUrl, count);
     }
 
     static fromJson(json: Record<string, any>) {
         return new ProductsTaskResult(json._id, json.timestamp,
             json.status, json.page_url, json.count,
-            json.results.map((item: Record<string, any>) => DiscountProduct.fromJson(item)))
+            json.results.map((item: Record<string, any>) => ProductItem.fromJson(item)))
     }
 }
 

@@ -26,7 +26,7 @@ api.add_resource(
 )
 api.add_resource(
     DiscountFinderJob,
-    "/api/discounts-finder/single-url-result/<object_id>",
+    "/api/discounts-finder/discounts-tasks/<object_id>",
     methods=["GET"],
     endpoint="single_url_result",
 )
@@ -34,7 +34,7 @@ api.add_resource(
     DiscountsFinderTasksList,
     "/api/discounts-finder/discounts-tasks",
     methods=["GET"],
-    endpoint="discounts_tasks",
+    endpoint="single_url_tasks",
 )
 
 if __name__ == "__main__":

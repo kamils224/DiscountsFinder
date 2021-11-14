@@ -1,6 +1,6 @@
 import {Button, Table} from "antd";
 import {useEffect, useState} from "react";
-import productsTasksApi, {ProductsTasks} from "../api/products-tasks";
+import productsTasksApi, { ProductsTasks } from "../../api/products-tasks";
 
 const columns = [
     {
