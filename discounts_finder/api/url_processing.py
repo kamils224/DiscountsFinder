@@ -17,7 +17,7 @@ class DiscountFinderJob(Resource):
         task_service = DiscountsFinderService()
         result = task_service.process_single_url(url)
 
-        return {"object_id": result.id, "status": result.status}
+        return asdict(result)
 
     @staticmethod
     def get(object_id: str):

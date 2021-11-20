@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from datetime import datetime
 from typing import List
 
@@ -10,18 +10,12 @@ from discounts_finder.repositories.products_tasks_repository import (
 )
 
 
-@dataclass
-class TaskResult:
-    id: str
-    status: str
-
-
 class DiscountsFinderService:
     def __init__(self):
         self._products_tasks_repo = ProductsTaskRepository()
 
-    def process_single_url(self, url: str) -> TaskResult:
-        task = ProductsTaskCreate(
+    def process_single_url(self, url: str) -> ProductsTaskRead:
+        created_task = ProductsTaskCreate(
             page_url=url,
             status=ProductsTaskCreate.STATUS_PROCESSING,
             timestamp=datetime.timestamp(datetime.now()),
@@ -29,11 +23,9 @@ class DiscountsFinderService:
             results=None,
             count=0,
         )
-        result_id = self._products_tasks_repo.create(task)
-        task_result = TaskResult(result_id, task.status)
-        process_products_url.delay(task_result.id, url)
-
-        return task_result
+        result_id = self._products_tasks_repo.create(created_task)
+        process_products_url.delay(result_id, url)
+        return ProductsTaskRead(_id=result_id, **asdict(created_task))
 
     def get_single_url_result(self, object_id: str) -> ProductsTaskRead:
         return self._products_tasks_repo.read(object_id)

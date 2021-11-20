@@ -1,7 +1,10 @@
-import {Button, Table} from "antd";
-import {useEffect, useState} from "react";
+import {Button, Table, Input, Row, Col, Divider } from "antd";
+import { useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import productsTasksApi, { ProductsTasks } from "../../api/products-tasks";
+import {isValidHttpUrl} from "../../utils/validators";
+
+const { Search } = Input;
 
 const columns = [
     {
@@ -27,7 +30,7 @@ const columns = [
             return (
                 <a href={record.pageUrl}>{record.pageUrl}</a>
             )
-        }
+        },
     },
     {
         title: "Count",
@@ -38,8 +41,10 @@ const columns = [
         title: "Action",
         key: 'action',
         render: (_: string, record: Record<string, any>) => (
-            <Button type="primary"><Link to={`/tasks/${record.id}`}>Show results</Link></Button>
-        )
+            <Button disabled={record.count === 0} type="primary">
+                <Link to={`/tasks/${record.id}`}>Show results</Link>
+            </Button>
+        ),
     },
 ];
 
@@ -54,23 +59,55 @@ const productsTasksDisplay = (productsTasks: ProductsTasks): Record<string, any>
     }
 }
 
+const fetchTasksRequest = async (): Promise<Array<ProductsTasks>> => {
+    return await productsTasksApi.getProductsTasks();
+}
+const addTaskRequest = async(url: string): Promise<ProductsTasks> => {
+    return await productsTasksApi.addTask(url);
+}
+
+
 export default function ProductsTasksList() {
     const [tasks, setTasks] = useState<Array<Record<string, any>>>([]);
-
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-            async function fetchTasks(): Promise<Array<ProductsTasks>> {
-        return await productsTasksApi.getProductsTasks();
-    }
-        fetchTasks().then(result => {
-            setTasks(result.map((item) => productsTasksDisplay(item)))
+        fetchTasksRequest().then(result => {
+            setTasks(result.map((item) => productsTasksDisplay(item)));
+            setIsLoading(false);
         });
     }, [])
+    const createTask = (value: string) => {
+        if (isLoading) { return; }
+        if (!isValidHttpUrl(value)) {
+            alert("Invalid URL");
+            return;
+        }
+        setIsLoading(true);
+        addTaskRequest(value).then(result => {
+            setTasks([...tasks, result])
+            setIsLoading(false);
+        });
+    }
 
     return (
         <div>
             <h2>Tasks list</h2>
-            <Table pagination={false} dataSource={tasks} columns={columns} rowKey="id"/>
+            <Row justify="center">
+                <Col xs={24} sm={12}>
+                    <Input.Group compact>
+                        <Search onSearch={ createTask } placeholder="Enter page URL" enterButton="Add Task" size="large" loading={false} />
+                    </Input.Group>
+                </Col>
+            </Row>
+            <Divider dashed />
+            <Row>
+                <Col span={24}>
+                    <Table loading={isLoading} scroll={{ x: 900 }} pagination={false}
+                           dataSource={tasks} columns={columns} rowKey="id"/>
+                </Col>
+            </Row>
+
         </div>
     );
 }

@@ -42,15 +42,20 @@ export class ProductsTaskResult extends ProductsTasks {
 
 class ProductsTasksApi {
 
-    baseUrl = "/api/discounts-finder/discounts-tasks";
+    baseUrl = "/api/discounts-finder";
+    createTaskUrl = "/api/discounts-finder/process-single-url"
 
     async getProductsTasks(): Promise<Array<ProductsTasks>> {
-        const response = await axiosInstance.get(this.baseUrl);
+        const response = await axiosInstance.get(`${this.baseUrl}/discounts-tasks`);
         return response.data.map((item: Record<string, any>) => ProductsTasks.fromJson(item));
     }
     async getProductTaskResult(taskId: string): Promise<ProductsTaskResult> {
-        const response = await axiosInstance.get(`${this.baseUrl}/${taskId}`);
+        const response = await axiosInstance.get(`${this.baseUrl}/discounts-tasks/${taskId}`);
         return ProductsTaskResult.fromJson(response.data);
+    }
+    async addTask(url: string): Promise<ProductsTasks> {
+        const response = await axiosInstance.post(this.createTaskUrl, { url: url })
+        return ProductsTasks.fromJson(response.data);
     }
 }
 
