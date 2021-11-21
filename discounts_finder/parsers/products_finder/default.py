@@ -57,7 +57,7 @@ def _get_product_divs(price_divs: List[DivPricePair]) -> List[WebShopProduct]:
 class DefaultProductsFinder(BaseProductsFinder):
     CURRENCY = "zł"
     PRICE_REGEX = re.compile(BaseProductsFinder.PRICE_PATTERN + r"\s?" + CURRENCY)
-    ZERO_PRICE_REGEX = re.compile(r"0(?:[.,]00)?\s" + CURRENCY)
+    ZERO_PRICE_REGEX = re.compile(r"0(?:[.,]00)?\s?" + CURRENCY)
 
     def _get_discount_price_divs(self) -> List[DivPricePair]:
         divs = self.parsed_html.findAll("div")
