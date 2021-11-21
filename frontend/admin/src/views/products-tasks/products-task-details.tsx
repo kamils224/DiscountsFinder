@@ -1,4 +1,4 @@
-import {Row, Col, Image} from "antd";
+import {Row, Col, Image, Card} from "antd";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import productsTasksApi, {ProductsTaskResult} from "../../api/products-tasks";
@@ -23,15 +23,17 @@ export default function ProductsTaskDetails() {
     const productItems = products?.results.map(
         (item, index) => (
             <Col xs={24} md={8} xl={6} key={`item-${index}`}>
-                <a href={item.url} >
-                    <Image preview={false} src={item.imageUrl} />
-                </a>
-                <br/>
-                {item.discountPrice} - <span style={{textDecoration: "line-through"}}>{item.price}</span>
-                <br/>
-                <h3 style={{color: "red"}}>
-                    { Math.round(calculateDiscount(parseFloat(item.price), parseFloat(item.discountPrice))) }%
-                </h3>
+                <Card>
+                    <a href={item.url} >
+                        <Image preview={false} src={item.imageUrl} />
+                    </a>
+                    <br/>
+                        {item.discountPrice} - <span style={{textDecoration: "line-through"}}>{item.price}</span>
+                    <br/>
+                    <h3 style={{color: "red"}}>
+                        { Math.round(calculateDiscount(parseFloat(item.price), parseFloat(item.discountPrice))) }%
+                    </h3>
+                </Card>
             </Col>
         )
     )

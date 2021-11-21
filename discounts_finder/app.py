@@ -27,7 +27,7 @@ api.add_resource(
 api.add_resource(
     DiscountFinderJob,
     "/api/discounts-finder/discounts-tasks/<object_id>",
-    methods=["GET"],
+    methods=["GET", "DELETE"],
     endpoint="single_url_result",
 )
 api.add_resource(

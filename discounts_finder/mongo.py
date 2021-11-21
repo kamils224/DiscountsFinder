@@ -41,3 +41,8 @@ class MongoCollection:
         if exclude is None:
             return self._collection.find({})
         return self._collection.find({}, {field: False for field in exclude})
+
+    def delete_by_id(self, object_id):
+        query = {"_id": ObjectId(object_id)}
+        result = self._collection.delete_one(query)
+        return result

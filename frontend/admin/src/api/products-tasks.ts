@@ -44,6 +44,7 @@ class ProductsTasksApi {
 
     baseUrl = "/api/discounts-finder";
     createTaskUrl = "/api/discounts-finder/process-single-url"
+    deleteTaskUrl = "/api/discounts-finder/discounts-tasks"
 
     async getProductsTasks(): Promise<Array<ProductsTasks>> {
         const response = await axiosInstance.get(`${this.baseUrl}/discounts-tasks`);
@@ -56,6 +57,10 @@ class ProductsTasksApi {
     async addTask(url: string): Promise<ProductsTasks> {
         const response = await axiosInstance.post(this.createTaskUrl, { url: url })
         return ProductsTasks.fromJson(response.data);
+    }
+    async deleteTask(objectId: string): Promise<boolean> {
+        const response = await axiosInstance.delete(`${this.deleteTaskUrl}/${objectId}`)
+        return response.status === 204;
     }
 }
 

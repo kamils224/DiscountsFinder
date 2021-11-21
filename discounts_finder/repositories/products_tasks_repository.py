@@ -62,8 +62,9 @@ class ProductsTaskRepository(BaseRepository):
         updated = self._mongo_collection.update_by_id(obj_id, update_query)
         return updated.upserted_id
 
-    def delete(self, obj_id: Union[str, int]):
-        raise NotImplementedError()
+    def delete(self, obj_id: Union[str, int]) -> bool:
+        delete_result = self._mongo_collection.delete_by_id(obj_id)
+        return delete_result.deleted_count == 1
 
     def read_all(self, exclude_fields: List[str] = None) -> List[ProductsTaskRead]:
         products_tasks = self._mongo_collection.all(exclude=exclude_fields)

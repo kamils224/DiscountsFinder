@@ -1,4 +1,4 @@
-import {Button, Table, Input, Row, Col, Divider } from "antd";
+import {Button, Table, Input, Row, Col, Divider, Space} from "antd";
 import { useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import productsTasksApi, { ProductsTasks } from "../../api/products-tasks";
@@ -6,7 +6,7 @@ import {isValidHttpUrl} from "../../utils/validators";
 
 const { Search } = Input;
 
-const columns = [
+const getColumns = (deleteCallback: Function) => [
     {
         title: "Object Id",
         dataIndex: "id",
@@ -41,9 +41,16 @@ const columns = [
         title: "Action",
         key: 'action',
         render: (_: string, record: Record<string, any>) => (
-            <Button disabled={record.count === 0} type="primary">
-                <Link to={`/tasks/${record.id}`}>Show results</Link>
-            </Button>
+            <Space>
+                <Button disabled={record.count === 0} type="primary">
+                    <Link to={`/tasks/${record.id}`}>Show results</Link>
+                </Button>
+                <Button onClick={() => { deleteCallback(record.id)} } danger type="primary">
+                    Delete
+                </Button>
+
+            </Space>
+
         ),
     },
 ];
@@ -64,6 +71,9 @@ const fetchTasksRequest = async (): Promise<Array<ProductsTasks>> => {
 }
 const addTaskRequest = async(url: string): Promise<ProductsTasks> => {
     return await productsTasksApi.addTask(url);
+}
+const deleteTaskRequest = async(objectId: string): Promise<boolean> => {
+    return await productsTasksApi.deleteTask(objectId);
 }
 
 
@@ -89,6 +99,18 @@ export default function ProductsTasksList() {
             setIsLoading(false);
         });
     }
+    const deleteTask = (objectId: string) => {
+        if (isLoading) { return; }
+        setIsLoading(true);
+        deleteTaskRequest(objectId).then((deleted) => {
+            if (!deleted){
+                alert(`Could not delete the task ${objectId}`)
+                return;
+            }
+            setTasks([...tasks.filter(task => task.id !== objectId)])
+            setIsLoading(false);
+        });
+    }
 
     return (
         <div>
@@ -96,7 +118,8 @@ export default function ProductsTasksList() {
             <Row justify="center">
                 <Col xs={24} sm={12}>
                     <Input.Group compact>
-                        <Search onSearch={ createTask } placeholder="Enter page URL" enterButton="Add Task" size="large" loading={false} />
+                        <Search onSearch={ createTask } placeholder="Enter page URL"
+                                enterButton="Add Task" size="large" loading={isLoading} />
                     </Input.Group>
                 </Col>
             </Row>
@@ -104,7 +127,7 @@ export default function ProductsTasksList() {
             <Row>
                 <Col span={24}>
                     <Table loading={isLoading} scroll={{ x: 900 }} pagination={false}
-                           dataSource={tasks} columns={columns} rowKey="id"/>
+                           dataSource={tasks} columns={getColumns(deleteTask)} rowKey="id"/>
                 </Col>
             </Row>
 

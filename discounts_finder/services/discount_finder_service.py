@@ -32,3 +32,6 @@ class DiscountsFinderService:
 
     def get_single_url_tasks(self) -> List[ProductsTaskRead]:
         return self._products_tasks_repo.read_all(exclude_fields=["results"])
+
+    def delete_single_url_result(self, object_id) -> bool:
+        return self._products_tasks_repo.delete(object_id)
