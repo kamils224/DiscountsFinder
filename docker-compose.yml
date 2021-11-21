@@ -4,7 +4,6 @@ services:
   web:
     build:
       context: ./discounts_finder/
-      target: web
     volumes:
       - ./discounts_finder:/discounts_finder/
     ports:
@@ -27,22 +26,9 @@ services:
   redis:
     image: redis:alpine
   celery-worker:
-    working_dir: /discounts_finder
     build:
       context: ./discounts_finder/
-      target: celery_worker
-    user: root
-    depends_on:
-      - redis
-    env_file:
-      - ./discounts_finder/.env.dev
-    volumes:
-      - ./discounts_finder:/discounts_finder
-  celery-beat:
-    working_dir: /discounts_finder
-    build:
-      context: ./discounts_finder/
-      target: celery_beat
+    command: "celery -A celery_worker.celery_init.celery worker -l info"
     user: root
     depends_on:
       - redis

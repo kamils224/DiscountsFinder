@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discounts-finder-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: discounts-finder-app
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: discounts-finder-app
+        tier: backend
+    spec:
+      containers:
+        - name: discounts-finder-flask
+          image: grevax24/discounts-finder:demo-1
