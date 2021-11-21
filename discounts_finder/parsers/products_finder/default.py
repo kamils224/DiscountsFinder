@@ -1,5 +1,7 @@
+import logging
 import re
 from dataclasses import dataclass
+from decimal import Decimal
 from typing import List, Optional
 
 from bs4 import Tag
@@ -29,12 +31,12 @@ def _create_product(
     price_pairs: DivPricePair, image_tag: Tag, anchor_tag: Tag
 ) -> Optional[WebShopProduct]:
     prices = sorted(
-        [remove_letters(text).replace(",", ".") for text in price_pairs.price_text]
+        [Decimal(remove_letters(text).replace(",", ".")) for text in price_pairs.price_text]
     )
     url = anchor_tag.attrs["href"]
     image_url = get_image_url(image_tag)
 
-    return WebShopProduct(url, image_url, prices[0], prices[1])
+    return WebShopProduct(url, image_url, str(prices[0]), str(prices[1]))
 
 
 def _get_product_divs(price_divs: List[DivPricePair]) -> List[WebShopProduct]:
@@ -55,7 +57,7 @@ def _get_product_divs(price_divs: List[DivPricePair]) -> List[WebShopProduct]:
 class DefaultProductsFinder(BaseProductsFinder):
     CURRENCY = "zł"
     PRICE_REGEX = re.compile(BaseProductsFinder.PRICE_PATTERN + r"\s?" + CURRENCY)
-    ZERO_PRICE_REGEX = re.compile(r"0(?:[.,]00)?\s?zł" + CURRENCY)
+    ZERO_PRICE_REGEX = re.compile(r"0(?:[.,]00)?\s?" + CURRENCY)
 
     def _get_discount_price_divs(self) -> List[DivPricePair]:
         divs = self.parsed_html.findAll("div")

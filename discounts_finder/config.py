@@ -4,6 +4,7 @@ BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
+    CORS_HEADERS = "Content-Type"
     CELERY_BROKER_URL = "redis://localhost:6379/0"
     imports = ("discounts_finder.celery_worker.tasks",)
     MONGO_URI = (

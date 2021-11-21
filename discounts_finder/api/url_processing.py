@@ -14,15 +14,24 @@ class DiscountFinderJob(Resource):
         args = parser.parse_args()
         url = args["url"]
 
-        task_service = DiscountsFinderService()
-        result = task_service.process_single_url(url)
+        result = DiscountsFinderService().process_single_url(url)
 
-        return {"object_id": result.id, "status": result.status}
+        return asdict(result)
 
     @staticmethod
     def get(object_id: str):
-        task_service = DiscountsFinderService()
-        result = task_service.get_single_url_result(object_id)
-        print("result get")
-        print(result)
+        result = DiscountsFinderService().get_single_url_result(object_id)
         return asdict(result)
+
+    @staticmethod
+    def delete(object_id: str):
+        deleted = DiscountsFinderService().delete_single_url_result(object_id)
+        status_code = 204 if deleted else 404
+        return {"deleted": deleted}, status_code
+
+
+class DiscountsFinderTasksList(Resource):
+    @staticmethod
+    def get():
+        result = DiscountsFinderService().get_single_url_tasks()
+        return [asdict(item) for item in result]
