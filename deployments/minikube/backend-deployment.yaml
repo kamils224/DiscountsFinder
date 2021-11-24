@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: discounts-finder-deployment
+  name: discounts-finder-backend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: discounts-finder-app
@@ -16,4 +16,10 @@ spec:
     spec:
       containers:
         - name: discounts-finder-flask
-          image: grevax24/discounts-finder:demo-1
+          image: grevax24/discounts-finder:demo-v0
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-credentials
+                  key: mongo-uri

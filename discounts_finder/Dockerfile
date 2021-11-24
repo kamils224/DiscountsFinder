@@ -14,7 +14,7 @@ RUN apt-get update && apt install -y gconf-service libasound2 libatk1.0-0 libc6 
 RUN pip install pyppeteer && pyppeteer-install
 
 COPY requirements.txt /discounts_finder/requirements.txt
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt && pip install pymongo[srv]
 
 ENV PYTHONPATH="$PYTHONPATH:/"
 
