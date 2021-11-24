@@ -1,16 +1,28 @@
-# Minikube deployment
+# Minikube demo deployment
+
+## Deploy app
+Run minikube instance:
+
+`minikube start`
+
 Create secret for MONGO DB:
 
 `kubectl create secret generic mongo-credentials --from-literal=mongo-uri=<yourMongoURI>`
 
-`kubectl apply -f redis-deployment.yaml`
+Deploy app via Makefile:
 
-`kubectl apply -f redis-service.yaml`
+`make discounts-app-deploy`
 
-`kubectl apply -f config-map.yaml`
+Run minikube backend service:
 
-`kubectl apply -f celery-deployment.yaml`
+`minikube service backend`
 
-`kubectl apply -f backend-deployment.yaml`
+## Removing resources
 
-`kubectl apply -f backend-service.yaml`
+Delete app:
+
+`make discounts-app-delete`
+
+Delete MONGO DB secret:
+
+`kubectl delete secret mongo-credentials`
