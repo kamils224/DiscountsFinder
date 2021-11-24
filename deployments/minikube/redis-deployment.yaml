@@ -17,10 +17,5 @@ spec:
       containers:
       - name: redis
         image: redis:6.2.6-alpine
-        command:
-          - "redis-server"
-        args:
-          - "--protected-mode"
-          - "no"
         ports:
         - containerPort: 6379

@@ -23,3 +23,8 @@ spec:
                 secretKeyRef:
                   name: mongo-credentials
                   key: mongo-uri
+            - name: CELERY_BROKER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config-map
+                  key: celery-broker-url
