@@ -10,18 +10,13 @@ RUN apt-get update && apt install -y gconf-service libasound2 libatk1.0-0 libc6 
     libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 \
     libnss3 lsb-release xdg-utils wget
 
+# Chromium install
 RUN pip install pyppeteer && pyppeteer-install
 
 COPY requirements.txt /discounts_finder/requirements.txt
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt && pip install pymongo[srv]
 
 ENV PYTHONPATH="$PYTHONPATH:/"
 
 ADD . /discounts_finder
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
-############################################################
-FROM web as celery_worker
-CMD ["celery", "-A", "celery_worker.celery_init.celery", "worker", "-l", "info"]
-############################################################
-FROM celery_worker as celery_beat
-CMD ["celery", "-A", "celery_worker.celery_init.celery", "beat", "-l", "info"]

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discounts-finder-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discounts-finder-app
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: discounts-finder-app
+        tier: backend
+    spec:
+      containers:
+        - name: discounts-finder-flask
+          image: grevax24/discounts-finder:demo-v0
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-credentials
+                  key: mongo-uri
+            - name: CELERY_BROKER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config-map
+                  key: celery-broker-url

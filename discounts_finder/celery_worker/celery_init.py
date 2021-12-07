@@ -10,4 +10,5 @@ def make_celery():
 
 celery = make_celery()
 
-celery.conf.beat_schedule = {}
+# TODO add periodic task in future
+# celery.conf.beat_schedule = {}
