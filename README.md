@@ -21,3 +21,10 @@ The application aggregates discounts from web shops. The idea is to find discoun
 - Frontend allows processing single URL and displays result with CRUD operations.
 - It's only an early prototype, I don't have time for it :(
 
+## Future Idea
+Create a generic finder where user can customize what HTML elements should be catched. Example: I can create a json config (based on some rules) and then I receive what I wanted :)
+What this config should contain?
+- Finding a desired element (class, id, etc...)
+- Using pagination if needed
+- Finding patterns in selected element (regex or some nested structures)
+- ...
